@@ -1,14 +1,12 @@
-# Karaoke Map Wisconsin (Milestone 1)
+# Karaoke Map Wisconsin (Milestone 2)
 
 A beginner-friendly, mobile-first Next.js starter for the **Karaoke Map Wisconsin** MVP.
 
-This milestone only includes:
-- Basic Next.js App Router setup
-- Tailwind CSS setup
-- Shared app layout
-- Placeholder public home page (`/`)
-- Placeholder admin login page (`/admin/login`)
-- Supabase client scaffolding and environment variable setup
+This milestone includes:
+- Milestone 1 app scaffold (Next.js App Router, TypeScript, Tailwind, placeholder pages)
+- Supabase utilities for browser/server usage
+- Initial database schema with `venues` and `events` tables
+- Temporary dev page for a simple Supabase read check
 
 ## Tech stack
 - Next.js (App Router)
@@ -17,23 +15,16 @@ This milestone only includes:
 - Supabase
 - Vercel-ready project structure
 
-## Folder structure (simple and clear)
+## Folder structure (Milestone 2 additions)
 
 ```text
 app/
-  admin/
-    login/
-      page.tsx        # Placeholder admin login page
-  globals.css         # Global Tailwind styles
-  layout.tsx          # Shared layout for all routes
-  page.tsx            # Public homepage
-components/
-  site-header.tsx     # Reusable shared header component
-lib/
-  supabase/
-    client.ts         # Browser/client-side Supabase utility
-    server.ts         # Server-side Supabase utility factory
-.env.example          # Required environment variables template
+  dev/
+    supabase-check/
+      page.tsx                 # Temporary dev-only Supabase read check
+supabase/
+  schema/
+    milestone-2.sql            # SQL schema for venues + events
 ```
 
 ## Local setup
@@ -52,14 +43,21 @@ lib/
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-4. **Start the app**
+4. **Apply Milestone 2 SQL in Supabase**
+   - Open your Supabase project dashboard
+   - Go to **SQL Editor**
+   - Open `supabase/schema/milestone-2.sql` from this repo and copy its contents
+   - Paste into SQL Editor and click **Run**
+
+5. **Start the app**
    ```bash
    npm run dev
    ```
 
-5. Open:
-   - http://localhost:3000
-   - http://localhost:3000/admin/login
+6. **Test the temporary connectivity page**
+   - Visit: http://localhost:3000/dev/supabase-check
+   - Success state should show: **"Connection check succeeded."**
+   - If there is a problem, the page shows the Supabase error message
 
 ## Validation commands
 
@@ -71,5 +69,5 @@ npm run build
 ```
 
 ## Notes
-- Supabase is scaffolded but not wired into pages yet.
-- No auth flows, database schema, map features, or CRUD pages are implemented in this milestone.
+- The `/dev/supabase-check` route is temporary and dev-oriented.
+- This milestone intentionally does not include auth, CRUD, map features, recurring logic, or submission flows.
