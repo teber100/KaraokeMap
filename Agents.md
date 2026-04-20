@@ -38,3 +38,7 @@ When completing a task:
 2. List files created or modified
 3. Explain how to run or test the result
 4. Call out any follow-up steps
+
+## Validation commands
+- npm run lint
+- npm run build
