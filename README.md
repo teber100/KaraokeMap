@@ -1,12 +1,12 @@
-# Karaoke Map Wisconsin (Milestone 2)
+# Karaoke Map Wisconsin (Milestone 3)
 
 A beginner-friendly, mobile-first Next.js starter for the **Karaoke Map Wisconsin** MVP.
 
 This milestone includes:
 - Milestone 1 app scaffold (Next.js App Router, TypeScript, Tailwind, placeholder pages)
-- Supabase utilities for browser/server usage
-- Initial database schema with `venues` and `events` tables
-- Temporary dev page for a simple Supabase read check
+- Milestone 2 schema and Supabase connectivity check page
+- Milestone 3 private admin login/logout and admin CRUD for venues/events
+- Milestone 3 RLS policies for read-public/admin-write access
 
 ## Tech stack
 - Next.js (App Router)
@@ -15,16 +15,34 @@ This milestone includes:
 - Supabase
 - Vercel-ready project structure
 
-## Folder structure (Milestone 2 additions)
+## Folder structure (Milestone 3 additions)
 
 ```text
 app/
-  dev/
-    supabase-check/
-      page.tsx                 # Temporary dev-only Supabase read check
+  admin/
+    login/
+      page.tsx                    # Admin email/password login
+    (protected)/
+      layout.tsx                  # Protects admin routes except /admin/login
+      page.tsx                    # Admin landing page + logout
+      venues/
+        page.tsx                  # List venues
+        new/page.tsx              # Create venue
+        [id]/edit/page.tsx        # Edit/delete venue
+      events/
+        page.tsx                  # List upcoming events
+        new/page.tsx              # Create event
+        [id]/edit/page.tsx        # Edit event
+components/
+  admin/
+    auth-gate.tsx                 # Client auth check + redirect to /admin/login
+    logout-button.tsx             # Logout action
+    venue-form.tsx                # Venue form
+    event-form.tsx                # Event form
 supabase/
   schema/
-    milestone-2.sql            # SQL schema for venues + events
+    milestone-2.sql               # Tables + indexes + timestamps
+    milestone-3.sql               # RLS policies for venues/events
 ```
 
 ## Local setup
@@ -43,21 +61,28 @@ supabase/
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-4. **Apply Milestone 2 SQL in Supabase**
+4. **Apply SQL files in order**
    - Open your Supabase project dashboard
    - Go to **SQL Editor**
-   - Open `supabase/schema/milestone-2.sql` from this repo and copy its contents
-   - Paste into SQL Editor and click **Run**
+   - Run `supabase/schema/milestone-2.sql`
+   - Run `supabase/schema/milestone-3.sql`
 
-5. **Start the app**
+5. **Configure Supabase Auth for private admin-only login**
+   - Go to **Authentication → Providers → Email**
+   - Keep email/password enabled
+   - Turn **off** public signups (disable "Enable email signups")
+   - Go to **Authentication → Users**
+   - Click **Add user** and create your single admin user email/password manually
+
+6. **Start the app**
    ```bash
    npm run dev
    ```
 
-6. **Test the temporary connectivity page**
-   - Visit: http://localhost:3000/dev/supabase-check
-   - Success state should show: **"Connection check succeeded."**
-   - If there is a problem, the page shows the Supabase error message
+7. **Test admin flow**
+   - Visit `http://localhost:3000/admin/login`
+   - Sign in with the admin user created in Supabase
+   - Confirm protected routes redirect when logged out
 
 ## Validation commands
 
@@ -69,5 +94,5 @@ npm run build
 ```
 
 ## Notes
-- The `/dev/supabase-check` route is temporary and dev-oriented.
-- This milestone intentionally does not include auth, CRUD, map features, recurring logic, or submission flows.
+- `/admin/login` is the only unprotected admin route.
+- This milestone intentionally does not add signup, password reset, roles, map features, public browsing features, recurring logic, or monetization.
