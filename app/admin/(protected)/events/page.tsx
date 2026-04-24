@@ -103,7 +103,7 @@ export default function AdminEventsPage() {
               {events.map((eventRow) => (
                 <tr key={eventRow.id} className="border-t border-slate-100">
                   <td className="px-3 py-2">{new Date(eventRow.start_datetime).toLocaleString()}</td>
-                  <td className="px-3 py-2">{eventRow.venue?.[0]?.name ?? "Unknown venue"}</td>
+                  <td className="px-3 py-2">{eventRow.venue?.name ?? "Unknown venue"}</td>
                   <td className="px-3 py-2">{eventRow.title}</td>
                   <td className="px-3 py-2">{eventRow.status}</td>
                   <td className="px-3 py-2">{new Date(eventRow.last_verified_at).toLocaleString()}</td>
