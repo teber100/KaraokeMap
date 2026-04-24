@@ -10,7 +10,7 @@ type EventRow = {
   start_datetime: string;
   status: string;
   last_verified_at: string;
-  venue: { name: string }[] | null;
+  venue: { name: string } | null;
 };
 
 export default function AdminEventsPage() {
