@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { PublicDatePicker } from "@/components/public/public-date-picker";
+import { HomeEventsMap } from "@/components/public/home-events-map";
 import {
   formatChicagoDateTime,
   formatChicagoTime,
@@ -22,6 +23,8 @@ type PublicEventRow = {
   venue: {
     name: string;
     city: string;
+    latitude: number;
+    longitude: number;
   } | null;
 };
 
@@ -50,13 +53,25 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const { data, error } = await supabase
     .from("events")
-    .select("id, title, start_datetime, host_name, status, last_verified_at, venue:venues(name, city)")
+    .select("id, title, start_datetime, host_name, status, last_verified_at, venue:venues(name, city, latitude, longitude)")
     .neq("status", "canceled")
     .gte("start_datetime", startIso)
     .lt("start_datetime", endIso)
     .order("start_datetime", { ascending: true });
 
   const events = ((data ?? []) as unknown as PublicEventRow[]).filter((eventRow) => eventRow.venue);
+
+  const mapEvents = events
+    .filter((eventRow) => typeof eventRow.venue?.latitude === "number" && typeof eventRow.venue?.longitude === "number")
+    .map((eventRow) => ({
+      id: eventRow.id,
+      title: eventRow.title,
+      startTimeLabel: formatChicagoTime(eventRow.start_datetime),
+      venueName: eventRow.venue?.name ?? "Unknown venue",
+      city: eventRow.venue?.city ?? "Unknown city",
+      latitude: eventRow.venue?.latitude ?? 0,
+      longitude: eventRow.venue?.longitude ?? 0
+    }));
 
   return (
     <section className="space-y-6">
@@ -77,6 +92,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           We could not load events right now. Please try again soon.
         </p>
       ) : null}
+
+      {!error ? <HomeEventsMap events={mapEvents} /> : null}
 
       {!error && events.length === 0 ? (
         <div className="rounded-md border border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
