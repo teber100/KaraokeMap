@@ -1,4 +1,4 @@
-# Karaoke Map Wisconsin (Milestone 3)
+# Karaoke Map Wisconsin (Milestone 4)
 
 A beginner-friendly, mobile-first Next.js starter for the **Karaoke Map Wisconsin** MVP.
 
@@ -7,6 +7,7 @@ This milestone includes:
 - Milestone 2 schema and Supabase connectivity check page
 - Milestone 3 private admin login/logout and admin CRUD for venues/events
 - Milestone 3 RLS policies for read-public/admin-write access
+- Milestone 4 public event browsing pages (`/` and `/event/[id]`)
 
 ## Tech stack
 - Next.js (App Router)
@@ -15,34 +16,19 @@ This milestone includes:
 - Supabase
 - Vercel-ready project structure
 
-## Folder structure (Milestone 3 additions)
+## Folder structure (Milestone 4 additions)
 
 ```text
 app/
-  admin/
-    login/
-      page.tsx                    # Admin email/password login
-    (protected)/
-      layout.tsx                  # Protects admin routes except /admin/login
-      page.tsx                    # Admin landing page + logout
-      venues/
-        page.tsx                  # List venues
-        new/page.tsx              # Create venue
-        [id]/edit/page.tsx        # Edit/delete venue
-      events/
-        page.tsx                  # List upcoming events
-        new/page.tsx              # Create event
-        [id]/edit/page.tsx        # Edit event
+  page.tsx                        # Public homepage with date-based event list
+  event/
+    [id]/
+      page.tsx                    # Public event detail page
 components/
-  admin/
-    auth-gate.tsx                 # Client auth check + redirect to /admin/login
-    logout-button.tsx             # Logout action
-    venue-form.tsx                # Venue form
-    event-form.tsx                # Event form
-supabase/
-  schema/
-    milestone-2.sql               # Tables + indexes + timestamps
-    milestone-3.sql               # RLS policies for venues/events
+  public/
+    public-date-picker.tsx        # Date picker for the public homepage
+lib/
+  timezone.ts                     # America/Chicago date filtering + formatting helpers
 ```
 
 ## Local setup
@@ -79,10 +65,12 @@ supabase/
    npm run dev
    ```
 
-7. **Test admin flow**
-   - Visit `http://localhost:3000/admin/login`
-   - Sign in with the admin user created in Supabase
-   - Confirm protected routes redirect when logged out
+7. **Test milestone 4 public pages**
+   - Visit `http://localhost:3000/`
+   - Confirm the date picker defaults to today in America/Chicago
+   - Change the date and confirm the list updates
+   - Confirm canceled events are hidden and tentative events show a badge
+   - Click an event card and confirm `http://localhost:3000/event/<event-id>` opens the detail page
 
 ## Validation commands
 
@@ -94,5 +82,6 @@ npm run build
 ```
 
 ## Notes
-- `/admin/login` is the only unprotected admin route.
-- This milestone intentionally does not add signup, password reset, roles, map features, public browsing features, recurring logic, or monetization.
+- Public browsing is read-only in Milestone 4.
+- Date filtering on the homepage is based on the calendar day in **America/Chicago**.
+- This milestone intentionally does not add map features, geolocation, advanced filters, user accounts, recurring logic, or monetization.
