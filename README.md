@@ -1,4 +1,4 @@
-# Karaoke Map Wisconsin (Milestone 4)
+# Karaoke Map Wisconsin (Milestone 5)
 
 A beginner-friendly, mobile-first Next.js starter for the **Karaoke Map Wisconsin** MVP.
 
@@ -8,6 +8,7 @@ This milestone includes:
 - Milestone 3 private admin login/logout and admin CRUD for venues/events
 - Milestone 3 RLS policies for read-public/admin-write access
 - Milestone 4 public event browsing pages (`/` and `/event/[id]`)
+- Milestone 5 public homepage map (Leaflet + OpenStreetMap markers for selected-date events)
 
 ## Tech stack
 - Next.js (App Router)
@@ -16,16 +17,17 @@ This milestone includes:
 - Supabase
 - Vercel-ready project structure
 
-## Folder structure (Milestone 4 additions)
+## Folder structure (Milestone 5 additions)
 
 ```text
 app/
-  page.tsx                        # Public homepage with date-based event list
+  page.tsx                        # Public homepage with date-based event list + map
   event/
     [id]/
       page.tsx                    # Public event detail page
 components/
   public/
+    home-events-map.tsx           # Client-side Leaflet map for selected-date events
     public-date-picker.tsx        # Date picker for the public homepage
 lib/
   timezone.ts                     # America/Chicago date filtering + formatting helpers
@@ -65,11 +67,13 @@ lib/
    npm run dev
    ```
 
-7. **Test milestone 4 public pages**
+7. **Test milestone 5 public homepage**
    - Visit `http://localhost:3000/`
    - Confirm the date picker defaults to today in America/Chicago
    - Change the date and confirm the list updates
-   - Confirm canceled events are hidden and tentative events show a badge
+   - Confirm map renders with a Wisconsin default view when no events match
+   - Confirm event markers appear for matching events and popup links open `/event/<event-id>`
+   - Confirm canceled events are hidden and tentative events still show a badge
    - Click an event card and confirm `http://localhost:3000/event/<event-id>` opens the detail page
 
 ## Validation commands
@@ -82,6 +86,6 @@ npm run build
 ```
 
 ## Notes
-- Public browsing is read-only in Milestone 4.
+- Public browsing is read-only in Milestone 5.
 - Date filtering on the homepage is based on the calendar day in **America/Chicago**.
-- This milestone intentionally does not add map features, geolocation, advanced filters, user accounts, recurring logic, or monetization.
+- The homepage map uses Leaflet + OpenStreetMap and is intentionally simple (no geolocation, near-me, radius filtering, clustering, or personalization).
