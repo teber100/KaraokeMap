@@ -14,6 +14,7 @@ type HomeMapEvent = {
 
 type HomeEventsMapProps = {
   events: HomeMapEvent[];
+  selectedDate: string;
 };
 
 type LeafletMap = {
@@ -53,7 +54,7 @@ declare global {
   }
 }
 
-function createPopupContent(eventRow: HomeMapEvent) {
+function createPopupContent(eventRow: HomeMapEvent, selectedDate: string) {
   const wrapper = document.createElement("div");
   wrapper.className = "space-y-1";
 
@@ -74,7 +75,7 @@ function createPopupContent(eventRow: HomeMapEvent) {
   start.textContent = `Starts at ${eventRow.startTimeLabel}`;
 
   const link = document.createElement("a");
-  link.href = `/event/${eventRow.id}`;
+  link.href = `/event/${eventRow.id}?date=${selectedDate}`;
   link.className = "text-sm text-blue-700 underline";
   link.textContent = "View event details";
 
@@ -124,7 +125,7 @@ function loadLeafletScript() {
   });
 }
 
-export function HomeEventsMap({ events }: HomeEventsMapProps) {
+export function HomeEventsMap({ events, selectedDate }: HomeEventsMapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayerRef = useRef<LeafletLayerGroup | null>(null);
@@ -168,7 +169,7 @@ export function HomeEventsMap({ events }: HomeEventsMapProps) {
 
         for (const eventRow of events) {
           const marker = L.marker([eventRow.latitude, eventRow.longitude]);
-          marker.bindPopup(createPopupContent(eventRow));
+          marker.bindPopup(createPopupContent(eventRow, selectedDate));
           marker.addTo(markerLayerRef.current as LeafletLayerGroup);
         }
 
@@ -193,7 +194,7 @@ export function HomeEventsMap({ events }: HomeEventsMapProps) {
     return () => {
       isMounted = false;
     };
-  }, [events, eventBounds]);
+  }, [events, eventBounds, selectedDate]);
 
   useEffect(() => {
     return () => {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { PublicDatePicker } from "@/components/public/public-date-picker";
 import { HomeEventsMap } from "@/components/public/home-events-map";
+import { isValidDateOnly } from "@/lib/date";
 import {
   formatChicagoDateTime,
   formatChicagoTime,
@@ -27,22 +28,6 @@ type PublicEventRow = {
     longitude: number;
   } | null;
 };
-
-function isValidDateOnly(value: string | undefined) {
-  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false;
-  }
-
-  const [year, month, day] = value.split("-").map(Number);
-
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-
-  return (
-    parsed.getUTCFullYear() === year &&
-    parsed.getUTCMonth() === month - 1 &&
-    parsed.getUTCDate() === day
-  );
-}
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
@@ -93,7 +78,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </p>
       ) : null}
 
-      {!error ? <HomeEventsMap events={mapEvents} /> : null}
+      {!error ? <HomeEventsMap events={mapEvents} selectedDate={selectedDate} /> : null}
 
       {!error && events.length === 0 ? (
         <div className="rounded-md border border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
@@ -107,7 +92,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           {events.map((eventRow) => (
             <li key={eventRow.id}>
               <Link
-                href={`/event/${eventRow.id}`}
+                href={`/event/${eventRow.id}?date=${selectedDate}`}
                 className="block rounded-md border border-slate-200 bg-white p-4 text-left transition hover:border-slate-300"
               >
                 <div className="flex items-start justify-between gap-3">
