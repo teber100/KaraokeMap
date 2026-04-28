@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { isValidDateOnly } from "@/lib/date";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { formatChicagoDate, formatChicagoDateTime, formatChicagoTime } from "@/lib/timezone";
 
 type EventDetailPageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ date?: string }>;
 };
 
 type EventDetailRow = {
@@ -27,9 +29,11 @@ type EventDetailRow = {
   } | null;
 };
 
-export default async function EventDetailPage({ params }: EventDetailPageProps) {
+export default async function EventDetailPage({ params, searchParams }: EventDetailPageProps) {
   const { id } = await params;
+  const query = await searchParams;
   const supabase = createServerSupabaseClient();
+  const backHref = isValidDateOnly(query.date) ? `/?date=${query.date}` : "/";
 
   const { data, error } = await supabase
     .from("events")
@@ -60,7 +64,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
   return (
     <section className="space-y-5">
-      <Link href="/" className="text-sm text-slate-700 underline">
+      <Link href={backHref} className="text-sm text-slate-700 underline">
         Back to events
       </Link>
 
